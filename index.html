@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>E‑commerce Brasil | Produtos com frete em tempo real</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef3 100%);
+            color: #1a2c3e;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(90deg, #0b2b40 0%, #123e4a 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #ffb347;
+            font-size: 0.9rem;
+            display: block;
+        }
+
+        .cart-icon {
+            position: relative;
+            background: rgba(255,255,255,0.15);
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cart-icon:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .cart-icon i {
+            font-size: 1.5rem;
+        }
+
+        #carrinho-contador {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b35;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .frete-section {
+            margin: 40px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px 32px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .frete-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            flex: 2;
+            min-width: 200px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e3a4d;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 48px;
+            font-size: 1rem;
+            font-family: 'Inter', monospace;
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ffb347;
+            box-shadow: 0 0 0 3px rgba(255,180,71,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(95deg, #ff8c42, #ff6b35);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: linear-gradient(95deg, #ff9b55, #ff7a45);
+            box-shadow: 0 8px 20px rgba(255,107,53,0.3);
+        }
+
+        .frete-resultado {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 20px;
+            border-left: 5px solid #ff8c42;
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 48px 0 24px 0;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: #ff8c42;
+            border-radius: 4px;
+        }
+
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+            margin-top: 20px;
+        }
+
+        .produto-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+        }
+
+        .produto-imagem {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .produto-info {
+            padding: 20px;
+        }
+
+        .produto-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .preco {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ff6b35;
+            margin: 12px 0 6px;
+        }
+
+        .parcelamento {
+            font-size: 0.8rem;
+            color: #5a6e7c;
+            margin-bottom: 18px;
+        }
+
+        .btn-comprar {
+            background: #0b2b40;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-comprar:hover {
+            background: #1f4e64;
+        }
+
+    
+        .spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            color: #ff8c42;
+        }
+        .spinner:before {
+            content: "⏳";
+            animation: girar 1s infinite;
+        }
+        @keyframes girar {
+            from { transform: rotate(0deg);}
+            to { transform: rotate(360deg);}
+        }
+
+        .notificacao {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e3a4d;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 60px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-weight: 500;
+            animation: fadein 0.3s;
+        }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .erro {
+            color: #c2410c;
+            background: #fff1f0;
+            padding: 12px;
+            border-radius: 16px;
+            border-left: 4px solid #c2410c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0 30px;
+            margin-top: 60px;
+            color: #5a6e7c;
+            font-size: 0.85rem;
+            border-top: 1px solid #dce5ec;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .produtos-grid { gap: 16px; }
+            .btn-primary { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-content">
+        <div class="logo">
+            <h1>🛍️ E‑commerce Brasil</h1>
+            <span>entregas rápidas com tecnologia assíncrona</span>
+        </div>
+        <div class="cart-icon" id="carrinho-icon">
+            <i class="fas fa-shopping-bag"></i>
+            <span id="carrinho-contador">0</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="frete-section">
+        <div class="card">
+            <div class="frete-grid">
+                <div class="input-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Calcular frete por CEP</label>
+                    <input type="text" id="cep-input" placeholder="Ex: 01001000" maxlength="9" autocomplete="off">
+                </div>
+                <div>
+                    <button class="btn-primary" id="buscar-cep">
+                        <i class="fas fa-truck"></i> Calcular frete
+                    </button>
+                </div>
+            </div>
+            <div id="resultado-frete" class="frete-resultado">
+                <i class="fas fa-info-circle"></i> Digite um CEP e veja o valor do frete em tempo real.
+            </div>
+        </div>
+    </section>
+
+    <div>
+        <h2 class="section-title"><i class="fas fa-fire"></i> Ofertas exclusivas</h2>
+        <div id="produtos-container">
+            <div class="spinner">Carregando produtos incríveis...</div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p><i class="fas fa-code"></i> Processamento assíncrono com XMLHttpRequest | API REST simulada</p>
+    <p style="margin-top: 8px;">E‑commerce Brasil © 2026 – tecnologia em tempo real</p>
+</footer>
+
+<div id="carrinho-status"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/frete.js"></script>
+<script src="js/produtos.js"></script>
+<script src="js/carrinho.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+    
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const container = document.getElementById('produtos-container');
+            if (container && container.innerHTML.includes('Carregando produtos') && !window.produtosCarregados) {
+                console.warn('API de produtos demorou, injetando mock visual');
+                const mockProdutos = [
+                    { id: 1, nome: 'Smartwatch Tech X1', preco: 299.90, parcelas: 6, imagem: 'https://placehold.co/600x400?text=Smartwatch' },
+                    { id: 2, nome: 'Fone Bluetooth Pro', preco: 189.90, parcelas: 4, imagem: 'https://placehold.co/600x400?text=Fone+Pro' },
+                    { id: 3, nome: 'Mochila Executiva', preco: 249.90, parcelas: 5, imagem: 'https://placehold.co/600x400?text=Mochila' }
+                ];
+                if (typeof exibirProdutos === 'function') exibirProdutos(mockProdutos);
+                else container.innerHTML = '<div class="card">🚀 Demo: <button onclick="carregarProdutos(\'promocoes\')" class="btn-primary">Carregar produtos</button></div>';
+            }
+        }, 2000);
+    });
+</script>
+</body>
+</html>
